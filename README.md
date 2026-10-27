@@ -4,7 +4,7 @@ A farmer takes a photo of a leaf and instantly sees the likely disease, a confid
 
 **Live demo:** https://leafdoc-kp4f2jduref7gxamctir5r.streamlit.app/
 **GitHub:** https://github.com/muhammadahmadhoperevival-spec/leafdoc
-**Demo video:** YOUR-VIDEO-URL
+**Demo video:** https://www.awesomescreenshot.com/video/57817785?key=e89684276d06aafa361c4259535035fc
 
 ## Problem
 
