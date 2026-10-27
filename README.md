@@ -2,7 +2,8 @@
 
 A farmer takes a photo of a leaf and instantly sees the likely disease, a confidence score, a Grad-CAM heatmap showing where the model looked, and treatment advice in **English and Urdu**. If the model is unsure, or the image is not a leaf, it says so instead of guessing.
 
-**Live demo:** YOUR-SPACE-URL
+**Live demo:** https://leafdoc-kp4f2jduref7gxamctir5r.streamlit.app/
+**GitHub:** https://github.com/muhammadahmadhoperevival-spec/leafdoc
 **Demo video:** YOUR-VIDEO-URL
 
 ## Problem
@@ -27,7 +28,7 @@ PlantVillage does not contain cotton, so cotton is not supported.
 3. **Evaluation:** confusion matrix, per-class accuracy, confidence-threshold analysis.
 4. **Explainability:** Grad-CAM on the last ResNet block.
 5. **Safety logic:** a colour-based leaf check (rejects non-leaf images) and a confidence threshold of 0.6 (below it the app answers "Not sure").
-6. **App:** Gradio, deployed on Hugging Face Spaces.
+6. **App:** Streamlit, deployed on Streamlit Community Cloud (a Gradio version is included for local use).
 
 Images are resized to 128x128 so training runs on a CPU.
 
@@ -92,15 +93,18 @@ In the examples checked, the heatmaps concentrate on the leaf rather than the ba
 
 ## App behaviour
 
-- **Leaf photo, confident:** disease name, confidence, heatmap, English + Urdu advice.
+- **Leaf photo, confident (>= 60%):** disease name, confidence, heatmap, English + Urdu advice.
 - **Low confidence (< 60%):** "Not sure" message in English and Urdu, with a tip to retake the photo.
 - **Not a leaf (e.g. a coin):** "This does not look like a leaf photo", no prediction.
-
-Screenshots are in the `screenshots/` folder.
+- Photos can be uploaded or taken with the device camera.
 
 ## Project structure
 
 ```
+streamlit_app.py   # deployed Streamlit app (single file)
+tl_model.pth       # final ResNet18 weights
+classes.json       # class names
+requirements.txt   # dependencies for the deployed app
 src/
   make_splits.py   # dedup + leak-free split
   dataset.py       # Dataset, augmentation
@@ -109,7 +113,7 @@ src/
   evaluate.py      # confusion matrix, per-class accuracy, thresholds
   predict.py       # inference, Grad-CAM, not-sure logic
   advice.py        # English + Urdu advice
-app/app.py         # Gradio app
+app/app.py         # Gradio version (local use, needs: pip install gradio)
 ```
 
 ## How to run
@@ -119,17 +123,19 @@ git clone https://github.com/muhammadahmadhoperevival-spec/leafdoc
 cd leafdoc
 pip install -r requirements.txt
 
-# 1. Download PlantVillage and set ROOT in src/make_splits.py
+# Run the app with the included model
+streamlit run streamlit_app.py
+```
+
+To retrain from scratch:
+
+```bash
+# Download PlantVillage and set ROOT in src/make_splits.py
 python src/make_splits.py
 python src/train_cnn.py
 python src/train_tl.py
 python src/evaluate.py
-
-# 2. Launch the app (needs tl_model.pth and classes.json from training)
-python app/app.py
 ```
-
-Model weights (`*.pth`) are not stored in this repo. They are in the Hugging Face Space.
 
 ## Limitations
 
@@ -143,4 +149,4 @@ Model weights (`*.pth`) are not stored in this repo. They are in the Hugging Fac
 
 ## Tech stack
 
-Python, PyTorch, torchvision, timm, pytorch-grad-cam, scikit-learn, Gradio.
+Python, PyTorch, torchvision, timm, pytorch-grad-cam, scikit-learn, Streamlit, Gradio.
