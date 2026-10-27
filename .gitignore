@@ -1,5 +1,6 @@
 ﻿.venv/
 data/
 *.pth
+!tl_model.pth
 __pycache__/
 .idea/
